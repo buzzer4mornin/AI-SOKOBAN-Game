@@ -1,20 +1,13 @@
 import java.io.File;
-
 import com.martiansoftware.jsap.JSAPException;
-
 import cz.sokoban4j.tournament.SokobanTournamentConsole;
 
 public class Evaluate {
 
-	// A set of levels to run.
-	// You can replace "all" with a level number if you want to run only
-	// a single level from a level file, e.g.
-	//     "Easy/easy.sok;4"
-
 	public static String[] LEVELS = new String[] { 
-			//"Easy/easy.sok;all",								    // 10 easy levels
-			//"sokobano.de/Aymeric_Medium.sok;all",   // 10 medium levels
-			"sokobano.de/Aymeric_Hard.sok;all"    // 20 difficult levels
+			"Easy/easy.sok;all",			   		   // 10 easy levels
+			"sokobano.de/Aymeric_Medium.sok;all",    // 10 medium levels
+			"sokobano.de/Aymeric_Hard.sok;all"      // 20 difficult levels
 	};
 	
 	private static String getAllLevels() {
@@ -37,7 +30,7 @@ public class Evaluate {
 				new String[] {
 					"-l", levels,
 					"-r", "Sokoban4J-Playground/results/results-" + System.currentTimeMillis() + ".csv",
-					"-t", "" + (5*1000),  // maximum of 5 seconds/level
+					"-t", "" + (6*1000),  // maximum of 6 seconds/level
 					"-a", agentClass.getName(),
 					"-v", "" + visualize, 
 					"-f", "" + maxFail,

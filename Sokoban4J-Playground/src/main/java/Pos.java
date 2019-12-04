@@ -1,4 +1,3 @@
-
 public class Pos {
     private Integer hash = null;
     int x;
@@ -18,16 +17,10 @@ public class Pos {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Pos simpson = (Pos) o;
-        if(this.hashCode()==o.hashCode()) {
-            return true;}
-        else {return false;}
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if(this.hashCode()==o.hashCode())  return true;
+        else return false;
     }
 }
 

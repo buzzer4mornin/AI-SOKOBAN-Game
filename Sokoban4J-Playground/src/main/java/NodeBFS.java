@@ -1,17 +1,14 @@
 public class NodeBFS<EDirection>{
-    public int x;
-    public int y;
-    public NodeBFS<EDirection> parent;
-    public EDirection action; //action we took to get here
-
-
+    public int x; // tile x
+    public int y; // tile y
+    public NodeBFS<EDirection> parent; // parent node
+    public EDirection action;          // action we took to get here from parent node
 
     public NodeBFS(int x, int y, NodeBFS<EDirection> nodeparent, EDirection nodeaction) {
         this.x = x;
         this.y = y;
         this.parent = nodeparent;
         this.action = nodeaction;
-
     }
 
     public NodeBFS(NodeBFS<EDirection> another) {
@@ -20,6 +17,5 @@ public class NodeBFS<EDirection>{
         this.parent = another.parent;
         this.action = another.action;
     }
-
 
 }

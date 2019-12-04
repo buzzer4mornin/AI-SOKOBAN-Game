@@ -1,18 +1,16 @@
 public class Node<S, A> implements Comparable<Node<S,A>>{
-    public S state;
-    public Node<S, A> parent;
-    public A action;
-    public double cost;
-    public int estimate;
-    public double fcost;
-
+    public S state;            // board state of node
+    public Node<S, A> parent;  // parent node
+    public A action;           // action we took to get here from parent node
+    public double cost;        // cost of node
+    public int estimate;       // heuristic estimation of node
+    public double fcost;       // total cost of node
 
     public Node(S nodestate, Node<S, A> nodeparent, A nodeaction, double nodecost) {
         this.state = nodestate;
         this.parent = nodeparent;
         this.action = nodeaction;
         this.cost = nodecost;
-
     }
 
     public Node(Node<S,A> another) {

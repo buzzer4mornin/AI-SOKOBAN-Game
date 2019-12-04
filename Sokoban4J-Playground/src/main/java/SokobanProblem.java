@@ -1,54 +1,42 @@
 import java.util.*;
-
 import cz.sokoban4j.simulation.actions.EDirection;
-import cz.sokoban4j.simulation.actions.compact.CAction;
 import cz.sokoban4j.simulation.actions.compact.CMove;
 import cz.sokoban4j.simulation.actions.compact.CPush;
 import cz.sokoban4j.simulation.board.compact.BoardCompact;
 import cz.sokoban4j.simulation.board.compact.CTile;
-import cz.sokoban4j.simulation.board.compressed.MTile;
-
-
 
 public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection>{
+	private boolean[][] final_deadSquares; // if true -> square is Dead Square
+	private boolean[][] dead_lock;	// if true -> square is Dead Lock
+	private BoardCompact mainBoard;
 
-	private boolean[][] final_deadSquares = null;
-	private boolean[][] dead_lock = null;
-	private BoardCompact mainBoard;;
 	public SokobanProblem(BoardCompact board){
 		mainBoard = board;
-		//mainBoard.makeBoardCompressed();
 		final_deadSquares = new boolean[mainBoard.width()][mainBoard.height()];
 		final_deadSquares = DeadSquareDetector.detect(mainBoard);
 		dead_lock = new boolean[mainBoard.width()][mainBoard.height()];
 		for(int i = 0; i < mainBoard.width(); i++){
 			for(int j = 0; j < mainBoard.height(); j++) {
-				if(final_deadSquares[i][j]==true) {
+				if(final_deadSquares[i][j]==true){
 					dead_lock[i][j] = false;
 				}
 				else if(is_deadlock(i,j,mainBoard)==true){
 					dead_lock[i][j] = true;
 				}
 				else {
-
 					dead_lock[i][j] = false;
 				}
-
 			}
 		}
-		//printdead_lock();
-		//print_hashset();
 	}
 
-	public void print_hashset(){
-		HashSet<EDirection> yes = new HashSet<EDirection>();
-		yes = walkstowards(mainBoard);
-		for(EDirection my:yes){
-			System.out.println(my);
-		}
 
-	}
-
+	/* Given a state, we only consider directions where Sokoban either walks toward a box or pushes a box.
+	   by "pushing a box", we only consider cases where it doesnt push box to Dead Square or push doesnt result in Dead Lock.
+	   This optimisation will prune the search space of our original A* algorithm quite a bit.
+	   For this optimisation we use BreadthFirstSearch (BFS) from Sokoban's position,looking for all boxes.
+	   This will give shortest path from Sokoban to every box. If any of Sokoban's directions (UP,DOWN,LEFT,RIGHT) is not on one
+	   of those shortest paths, it is useless and we dont add it to HashSet<EDirection>... */
 	public HashSet<EDirection> walkstowards (BoardCompact state){
 		HashSet<EDirection> resultdirections = new HashSet<>();
 		EDirection[] directions = EDirection.arrows();
@@ -61,7 +49,6 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 			Pos currentNode_xy = new Pos(currentNode.x,currentNode.y);
 			if(visited.contains(currentNode_xy)) continue;
 			visited.add(currentNode_xy);
-
 			for (EDirection direction : directions) {
 				NodeBFS<EDirection> forwardNode = new NodeBFS<>(
 						currentNode.x + direction.dX,
@@ -71,7 +58,6 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 				);
 				Pos forwardNode_xy = new Pos(forwardNode.x,forwardNode.y);
 				if(CTile.isWall(state.tile(forwardNode.x, forwardNode.y)) || visited.contains(forwardNode_xy)) continue;
-
 				if(!CTile.isSomeBox(state.tile(forwardNode.x, forwardNode.y))){
 					queue.add(forwardNode);
 				}
@@ -81,7 +67,6 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 						&& results_deadlock(forwardNode.x+direction.dX,forwardNode.y+direction.dY,state,direction)==false
 				)
 				{
-					//NodeBFS<EDirection> copycurrent = new NodeBFS<>(forwardNode);
 					if (forwardNode.parent != null) {
 						while (forwardNode.parent != null) {
 							if (forwardNode.parent.parent == null) {
@@ -96,13 +81,16 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		return resultdirections;
 	}
 
-	//!CTile.forSomeBox(board.tile(forwardNode.x, forwardNode.y)
+
+	/*  Given (x,y) position, board state and EDirection, we check whether board state contains DeadLock situation or not
+	    if we push box to that position.
+		WHAT IS DEAD LOCK ? - A board situation is called a deadlock, if it makes the level unsolvable..
+		In other words, if board state contains deadlock situation, then it isn’t possible to push every box to goal,anymore.
+		Detecting deadlocks can prune huge parts of the search space and therefore is an important part of every solver.*/
 	public boolean results_deadlock(int x, int y, BoardCompact board, EDirection dir) {
 		EDirection[] directions = EDirection.arrows();
 		for (EDirection direction : directions) {
-			if(direction==dir.opposite()) {
-				continue;
-			}
+			if(direction==dir.opposite()) continue;
 			Pos currentNode = new Pos(x, y);
 			Pos currentNode_CW = new Pos(currentNode.x + direction.cw().dX,currentNode.y + direction.cw().dY);
 			Pos currentNode_CCW = new Pos(currentNode.x + direction.ccw().dX,currentNode.y + direction.ccw().dY);
@@ -115,22 +103,15 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 					return true;
 				}
 			}
-
 		}
 		return false;
 	}
 
-	public void printdead_lock(){
-		if(dead_lock != null){
-			System.out.println("dead squares: ");
-			for (int y = 0 ; y < mainBoard.height() ; ++y) {
-				for (int x = 0 ; x < mainBoard.width() ; ++x)
-					System.out.print(CTile.isWall(mainBoard.tile(x, y)) ? '#' : (dead_lock[x][y] ? 'X' : '_'));
-				System.out.println();
-			}
-		}
-	}
 
+
+	/*  Given (x,y) position and board state, we check whether that square is DeadLock or not.
+		Knowing all DeadLock squares beforehand helps us to predict DeadLock situations before.
+		We will use this method for execution of dead_lock[][] and results_deadlock().. */
 	public boolean is_deadlock(int x, int y, BoardCompact board) {
 		EDirection[] directions = EDirection.arrows();
 		for (EDirection direction : directions) {
@@ -149,26 +130,22 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		return false;
 	}
 
-
-	@Override
 	public BoardCompact initialState() {
 		return mainBoard;
-
 	}
+
 	public List<EDirection> actions(BoardCompact state) {
-		List<EDirection> last = new ArrayList<>();
-		HashSet<EDirection> results;
-		results = walkstowards(state);
-		for(EDirection mydir :results) {
-			last.add(mydir);
+		List<EDirection> available_actions = new ArrayList<>();
+		HashSet<EDirection> result_actions;
+		result_actions = walkstowards(state);
+		for(EDirection dirs :result_actions) {
+			available_actions.add(dirs);
 		}
-		return last;
+		return available_actions;
 	}
 
-	@Override
 	public BoardCompact result(BoardCompact state, EDirection action) {
 		BoardCompact bclone = state.clone();
-		//bclone.MYBOARD = false;
 		CPush mypush = CPush.getAction(action);
 		CMove mymove = CMove.getAction(action);
 		if(mymove.isPossible(bclone)) {
@@ -177,14 +154,10 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		}
 		else{
 			mypush.perform(bclone);
-			//bclone.MYBOARD = true;
 			return bclone;
 		}
 	}
 
-
-
-	@Override
 	public boolean isGoal(BoardCompact state) {
 		if(state.isVictory())
 		{
@@ -193,19 +166,13 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		return false;
 	}
 
-
-	@Override
 	public double cost(BoardCompact state, EDirection action) {
 		return 1;
 	}
 
 
-
-	@Override
+	//Our heuristic estimate is the sum of each box's distance to its nearest target, plus Sokoban's distance to the nearest box
 	public int estimate(BoardCompact state) {
-		//if (state.MYBOARD == false) {
-			//return 1000;
-		//} else {
 			List<int[]> myboxlist = new ArrayList<>();
 			List<int[]> mytargetlist = new ArrayList<>();
 			for (int y = 0; y < state.height(); ++y) {
@@ -233,11 +200,8 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 				if (manhattansokoban < sokobantobox) {
 					sokobantobox = manhattansokoban;
 				}
-
 				int minimum = 1000;
-				if (mytargetlist.size() == 0) {
-					break;
-				}
+				if (mytargetlist.size() == 0) break;
 				for (int j = 0; j < mytargetlist.size(); j++) {
 					int b[] = mytargetlist.get(j);
 					int manhattandistance = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
@@ -247,17 +211,10 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 					}
 					if (manhattandistance < minimum) {
 						minimum = manhattandistance;
-
 					}
 				}
 				totaldistanceboxtarget = totaldistanceboxtarget + minimum;
 			}
-			return totaldistanceboxtarget + sokobantobox - 1;
+			return totaldistanceboxtarget + sokobantobox;
 		}
-	//}
-
-
-
-
-
 }
