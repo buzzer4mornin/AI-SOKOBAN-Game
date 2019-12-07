@@ -170,7 +170,7 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		return 1;
 	}
 
-	//yay
+
 	//Our heuristic estimate is the sum of each box's distance to its nearest target, plus Sokoban's distance to the nearest box
 	public int estimate(BoardCompact state) {
 			List<int[]> myboxlist = new ArrayList<>();
