@@ -3,15 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8ea11f5f-51b0-46a9-8489-381f305dd099" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/AStar.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/AStar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Evaluate.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Evaluate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/MyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/MyAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/NodeBFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/NodeBFS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Pos.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Pos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Problem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/Problem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/RunMyAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/RunMyAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/SokobanProblem.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sokoban4J-Playground/src/main/java/SokobanProblem.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
