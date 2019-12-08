@@ -17,19 +17,13 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 		dead_lock = new boolean[mainBoard.width()][mainBoard.height()];
 		for(int i = 0; i < mainBoard.width(); i++){
 			for(int j = 0; j < mainBoard.height(); j++) {
-				if(final_deadSquares[i][j]==true){
-					dead_lock[i][j] = false;
-				}
-				else if(is_deadlock(i,j,mainBoard)==true){
-					dead_lock[i][j] = true;
-				}
-				else {
-					dead_lock[i][j] = false;
-				}
+				if(final_deadSquares[i][j]) dead_lock[i][j] = false;
+				else if(is_deadlock(i,j,mainBoard)) dead_lock[i][j] = true;
+				else dead_lock[i][j] = false;
+
 			}
 		}
 	}
-
 
 	/* Given a state, we only consider directions where Sokoban either walks toward a box or pushes a box.
 	   by "pushing a box", we only consider cases where it doesnt push box to Dead Square or push doesnt result in Dead Lock.
@@ -63,8 +57,8 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 				}
 				if (CTile.isSomeBox(state.tile(forwardNode.x, forwardNode.y))
 						&& !CTile.isSomeBox(state.tile(forwardNode.x+direction.dX,forwardNode.y+direction.dY))
-						&& final_deadSquares[forwardNode.x+direction.dX][forwardNode.y+direction.dY]==false
-						&& results_deadlock(forwardNode.x+direction.dX,forwardNode.y+direction.dY,state,direction)==false
+						&& !final_deadSquares[forwardNode.x+direction.dX][forwardNode.y+direction.dY]
+						&& !results_deadlock(forwardNode.x+direction.dX,forwardNode.y+direction.dY,state,direction)
 				)
 				{
 					if (forwardNode.parent != null) {
@@ -97,7 +91,7 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 			Pos forwardNode = new Pos(x + direction.dX, y + direction.dY);
 			Pos forwardNode_CW = new Pos(forwardNode.x + direction.cw().dX,forwardNode.y + direction.cw().dY);
 			Pos forwardNode_CCW = new Pos(forwardNode.x + direction.ccw().dX,forwardNode.y + direction.ccw().dY);
-			if(dead_lock[currentNode.x][currentNode.y]==true && dead_lock[forwardNode.x][forwardNode.y]==true && CTile.isSomeBox(board.tile(forwardNode.x, forwardNode.y))      ) {
+			if(dead_lock[currentNode.x][currentNode.y] && dead_lock[forwardNode.x][forwardNode.y] && CTile.isSomeBox(board.tile(forwardNode.x, forwardNode.y))      ) {
 				if((CTile.isWall(board.tile(currentNode_CW.x, currentNode_CW.y))&&CTile.isWall(board.tile(forwardNode_CW.x, forwardNode_CW.y))&& !CTile.forSomeBox(board.tile(forwardNode.x, forwardNode.y)))
 						||  (!CTile.forSomeBox(board.tile(forwardNode.x, forwardNode.y)) && CTile.isWall(board.tile(currentNode_CCW.x, currentNode_CCW.y))&&CTile.isWall(board.tile(forwardNode_CCW.x, forwardNode_CCW.y)))) {
 					return true;
@@ -122,9 +116,6 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 			Pos wallCCW = new Pos(forwardCCW.x + direction.dX, forwardCCW.y + direction.dY);
 			if(CTile.isWall(board.tile(forwardNode.x , forwardNode.y)) && (      (CTile.isWall(board.tile(wallCW.x, wallCW.y))&&!final_deadSquares[forwardCW.x][forwardCW.y])       ||       (CTile.isWall(board.tile(wallCCW.x, wallCCW.y))&&!final_deadSquares[forwardCCW.x][forwardCCW.y])     )) {
 				return true;
-			}
-			else {
-				continue;
 			}
 		}
 		return false;
@@ -159,10 +150,7 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 	}
 
 	public boolean isGoal(BoardCompact state) {
-		if(state.isVictory())
-		{
-			return true;
-		}
+		if(state.isVictory()) return true;
 		return false;
 	}
 
@@ -173,48 +161,48 @@ public class SokobanProblem implements HeuristicProblem<BoardCompact, EDirection
 
 	//Our heuristic estimate is the sum of each box's distance to its nearest target, plus Sokoban's distance to the nearest box
 	public int estimate(BoardCompact state) {
-			List<int[]> myboxlist = new ArrayList<>();
-			List<int[]> mytargetlist = new ArrayList<>();
-			for (int y = 0; y < state.height(); ++y) {
-				for (int x = 0; x < state.width(); ++x) {
-					if (CTile.isSomeBox(state.tile(x, y))) {
-						int[] a = new int[2];
-						a[0] = x;
-						a[1] = y;
-						myboxlist.add(a);
-					}
-					if (CTile.forSomeBox(state.tile(x, y))) {
-						int[] b = new int[2];
-						b[0] = x;
-						b[1] = y;
-						mytargetlist.add(b);
-					}
+		List<int[]> myboxlist = new ArrayList<>();
+		List<int[]> mytargetlist = new ArrayList<>();
+		for (int y = 0; y < state.height(); ++y) {
+			for (int x = 0; x < state.width(); ++x) {
+				if (CTile.isSomeBox(state.tile(x, y))) {
+					int[] a = new int[2];
+					a[0] = x;
+					a[1] = y;
+					myboxlist.add(a);
+				}
+				if (CTile.forSomeBox(state.tile(x, y))) {
+					int[] b = new int[2];
+					b[0] = x;
+					b[1] = y;
+					mytargetlist.add(b);
 				}
 			}
-			int sokobantobox = 1000;
-			int manhattansokoban = 0;
-			int totaldistanceboxtarget = 0;
-			for (int i = 0; i < myboxlist.size(); i++) {
-				int a[] = myboxlist.get(i);
-				manhattansokoban = Math.abs(a[0] - state.playerX) + Math.abs(a[1] - state.playerY);
-				if (manhattansokoban < sokobantobox) {
-					sokobantobox = manhattansokoban;
-				}
-				int minimum = 1000;
-				if (mytargetlist.size() == 0) break;
-				for (int j = 0; j < mytargetlist.size(); j++) {
-					int b[] = mytargetlist.get(j);
-					int manhattandistance = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
-					if (manhattandistance == 0) {
-						minimum = 0;
-						break;
-					}
-					if (manhattandistance < minimum) {
-						minimum = manhattandistance;
-					}
-				}
-				totaldistanceboxtarget = totaldistanceboxtarget + minimum;
-			}
-			return totaldistanceboxtarget + sokobantobox;
 		}
+		int sokobantobox = 1000;
+		int manhattansokoban;
+		int totaldistanceboxtarget = 0;
+		for (int i = 0; i < myboxlist.size(); i++) {
+			int a[] = myboxlist.get(i);
+			manhattansokoban = Math.abs(a[0] - state.playerX) + Math.abs(a[1] - state.playerY);
+			if (manhattansokoban < sokobantobox) {
+				sokobantobox = manhattansokoban;
+			}
+			int minimum = 1000;
+			if (mytargetlist.size() == 0) break;
+			for (int j = 0; j < mytargetlist.size(); j++) {
+				int b[] = mytargetlist.get(j);
+				int manhattandistance = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+				if (manhattandistance == 0) {
+					minimum = 0;
+					break;
+				}
+				if (manhattandistance < minimum) {
+					minimum = manhattandistance;
+				}
+			}
+			totaldistanceboxtarget = totaldistanceboxtarget + minimum;
+		}
+		return totaldistanceboxtarget + sokobantobox;
+	}
 }
