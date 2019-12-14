@@ -1,3 +1,5 @@
+To see my implementation, check files on  Sokoban4J-Playground 
+
 # Sokoban4J
 
 ![alt tag](https://github.com/kefik/Sokoban4J/raw/master/Sokoban4J/screenshot.png)
