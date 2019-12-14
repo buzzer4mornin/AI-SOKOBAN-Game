@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ea11f5f-51b0-46a9-8489-381f305dd099" name="Default Changelist" comment="" />
+    <list default="true" id="8ea11f5f-51b0-46a9-8489-381f305dd099" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +109,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575899020563</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Levels added">
+      <created>1576357339458</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1576357339458</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -130,6 +139,7 @@
     <MESSAGE value="spaces adjusted" />
     <MESSAGE value="fixes adjusted" />
     <MESSAGE value="heuristic method added" />
-    <option name="LAST_COMMIT_MESSAGE" value="heuristic method added" />
+    <MESSAGE value="Levels added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Levels added" />
   </component>
 </project>
