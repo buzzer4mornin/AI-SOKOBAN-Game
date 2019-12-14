@@ -1,4 +1,4 @@
-NOTE:To see my code implementation, check files on Sokoban4J-Playground/src/main/java/
+NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/
 
 # Sokoban4J
 
