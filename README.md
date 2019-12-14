@@ -1,4 +1,4 @@
-NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/ .. I implemented A* algorithm with admissible heuristic.
+NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A* algorithm with admissible heuristic.
 
 
 # Sokoban4J
