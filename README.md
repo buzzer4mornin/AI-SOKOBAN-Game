@@ -1,4 +1,5 @@
 NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A* algorithm with admissible heuristic.
+
 CHECK ASSIGNMENT WEBPAGE : https://ksvi.mff.cuni.cz/~dingle/2019/ai/sokoban/sokoban.html
 
 
