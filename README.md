@@ -1,8 +1,8 @@
-NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A* algorithm with admissible heuristic.
+**NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A* algorithm with admissible heuristic.**
 
-Check Project Webpage : https://ksvi.mff.cuni.cz/~dingle/2019/ai/sokoban/sokoban.html
+**Check Project Webpage : https://ksvi.mff.cuni.cz/~dingle/2019/ai/sokoban/sokoban.html**
 
-Award: 4th place among 28 students in Tournament. Agent solved 10 easy, 10 medium, 8 hard levels under 5sec.
+**Award: 4th place among 28 students in Tournament. Agent solved 10 easy, 10 medium, 8 hard levels under 5sec.**
 
 
 # Sokoban4J
