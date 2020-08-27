@@ -1,4 +1,4 @@
-**NOTE: To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A-star algorithm with admissible heuristic.**
+**To see my code implementation, check files on Sokoban4J-Playground/src/main/java/... I implemented A-star algorithm with admissible heuristic.**
 
 **Check Project Webpage : https://ksvi.mff.cuni.cz/~dingle/2019/ai/sokoban/sokoban.html**
 
