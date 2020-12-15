@@ -2,7 +2,7 @@
 
 **I implemented "A-star algorithm" with admissible heuristic.**
 
-**Agent solved 10 easy, 10 medium, 8 hard levels under 5sec.**
+**My implementation won 3rd place among 64 participants in Artificial Intelligence tournament. Agent solved 10 easy, 10 medium, 8 hard levels under 5sec.**
 
 
 # Sokoban4J
